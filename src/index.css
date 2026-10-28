@@ -1,0 +1,191 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@font-face {
+  font-family: 'Jameel Noori Nastaliq';
+  src: local('Jameel Noori Nastaliq'), local('Jameel-Noori-Nastaliq'), url('https://cdn.jsdelivr.net/gh/Suhail-Ahmad/Jameel-Noori-Nastaliq@master/Jameel%20Noori%20Nastaliq.ttf') format('truetype');
+  font-display: swap;
+}
+
+@theme {
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-urdu: "Noto Nastaliq Urdu", "Gulzar", "Jameel Noori Nastaliq", "Noto Sans Arabic", "Urdu Typesetting", "PakType Tehreer", "Segoe UI Historic", serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --color-zinc-850: #1c1c20;
+}
+
+/* Ensure Urdu text has adequate line-height for Nastaliq ascenders/descenders */
+.font-urdu {
+  font-family: var(--urdu-font, 'Noto Nastaliq Urdu', serif);
+  line-height: 2.2;
+  direction: rtl;
+  text-align: right;
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  /* Subtitle Animation Effects */
+  .anim-pulse-glow {
+    animation: subPulseGlow 3s ease-in-out infinite;
+  }
+  .anim-neon-flicker {
+    animation: subNeonFlicker 2.5s infinite;
+  }
+  .anim-wave-bounce {
+    animation: subWaveBounce 2s ease-in-out infinite;
+  }
+  .anim-karaoke-fade {
+    animation: subKaraokeFade 1.8s ease-in-out infinite alternate;
+  }
+  .anim-cinema-zoom {
+    animation: subCinemaZoom 4s ease-in-out infinite alternate;
+  }
+  .anim-audio-ripple {
+    animation: subAudioRipple 1.4s ease-in-out infinite alternate;
+  }
+  .anim-shimmer {
+    background-size: 200% auto;
+    animation: subShimmerSweep 3s linear infinite;
+  }
+}
+
+@keyframes subPulseGlow {
+  0%, 100% {
+    filter: drop-shadow(0 0 2px currentColor);
+    opacity: 1;
+  }
+  50% {
+    filter: drop-shadow(0 0 10px currentColor);
+    opacity: 0.92;
+  }
+}
+
+@keyframes subNeonFlicker {
+  0%, 100% { opacity: 1; filter: drop-shadow(0 0 6px currentColor); }
+  35% { opacity: 0.98; }
+  36% { opacity: 0.85; filter: drop-shadow(0 0 2px currentColor); }
+  38% { opacity: 1; filter: drop-shadow(0 0 8px currentColor); }
+  72% { opacity: 0.95; }
+  73% { opacity: 0.88; }
+  75% { opacity: 1; filter: drop-shadow(0 0 6px currentColor); }
+}
+
+@keyframes subWaveBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+@keyframes subKaraokeFade {
+  0% { opacity: 0.85; }
+  100% { opacity: 1; filter: brightness(1.15); }
+}
+
+@keyframes subCinemaZoom {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.02); }
+}
+
+@keyframes subAudioRipple {
+  0% { transform: scale(1); }
+  30% { transform: scale(1.018); filter: drop-shadow(0 0 4px currentColor); }
+  70% { transform: scale(0.995); }
+  100% { transform: scale(1); }
+}
+
+@keyframes subShimmerSweep {
+  0% { filter: brightness(0.95); }
+  50% { filter: brightness(1.25) drop-shadow(0 0 4px currentColor); }
+  100% { filter: brightness(0.95); }
+}
+
+/* ==========================================================================
+   App Themes & Enhanced Visual Styles
+   ========================================================================== */
+
+[data-app-theme="cyber"] {
+  --theme-accent: #00f0ff;
+  --theme-accent-glow: 0 0 14px rgba(0, 240, 255, 0.45);
+}
+
+[data-app-theme="cyber"] body,
+[data-app-theme="cyber"] .theme-root {
+  background-color: #07070e !important;
+}
+
+[data-app-theme="cyber"] header {
+  background-color: rgba(10, 11, 22, 0.95) !important;
+  border-bottom-color: rgba(0, 240, 255, 0.28) !important;
+  box-shadow: 0 4px 24px rgba(0, 240, 255, 0.08);
+}
+
+[data-app-theme="neon"] {
+  --theme-accent: #ec4899;
+  --theme-accent-glow: 0 0 16px rgba(236, 72, 153, 0.5);
+}
+
+[data-app-theme="neon"] body,
+[data-app-theme="neon"] .theme-root {
+  background-color: #0c0a1e !important;
+}
+
+[data-app-theme="neon"] header {
+  background-color: rgba(15, 12, 34, 0.95) !important;
+  border-bottom-color: rgba(236, 72, 153, 0.28) !important;
+  box-shadow: 0 4px 24px rgba(236, 72, 153, 0.08);
+}
+
+[data-app-theme="sapphire"] body,
+[data-app-theme="sapphire"] .theme-root {
+  background-color: #060e1c !important;
+}
+
+[data-app-theme="sapphire"] header {
+  background-color: rgba(8, 18, 36, 0.95) !important;
+  border-bottom-color: rgba(56, 189, 248, 0.22) !important;
+  box-shadow: 0 4px 24px rgba(56, 189, 248, 0.06);
+}
+
+[data-app-theme="amber"] body,
+[data-app-theme="amber"] .theme-root {
+  background-color: #120e0a !important;
+}
+
+[data-app-theme="amber"] header {
+  background-color: rgba(24, 18, 12, 0.95) !important;
+  border-bottom-color: rgba(245, 158, 11, 0.25) !important;
+  box-shadow: 0 4px 24px rgba(245, 158, 11, 0.06);
+}
+
+/* Card Glow and Focus Accents */
+[data-app-theme="cyber"] .border-zinc-200,
+[data-app-theme="cyber"] .dark\:border-zinc-700,
+[data-app-theme="cyber"] .dark\:border-zinc-800 {
+  border-color: rgba(0, 240, 255, 0.18) !important;
+}
+
+[data-app-theme="neon"] .border-zinc-200,
+[data-app-theme="neon"] .dark\:border-zinc-700,
+[data-app-theme="neon"] .dark\:border-zinc-800 {
+  border-color: rgba(236, 72, 153, 0.2) !important;
+}
+
+[data-app-theme="sapphire"] .border-zinc-200,
+[data-app-theme="sapphire"] .dark\:border-zinc-700,
+[data-app-theme="sapphire"] .dark\:border-zinc-800 {
+  border-color: rgba(56, 189, 248, 0.18) !important;
+}
+
+[data-app-theme="amber"] .border-zinc-200,
+[data-app-theme="amber"] .dark\:border-zinc-700,
+[data-app-theme="amber"] .dark\:border-zinc-800 {
+  border-color: rgba(245, 158, 11, 0.18) !important;
+}
+

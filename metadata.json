@@ -1,0 +1,5 @@
+{
+  "name": "Urdu Subtitles Localizer",
+  "description": "A context-aware subtitle translation tool that uses Gemini AI and web search to generate culturally nuanced Urdu translations.",
+  "requestFramePermissions": []
+}
