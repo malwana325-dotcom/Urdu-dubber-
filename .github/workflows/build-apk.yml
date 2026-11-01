@@ -130,6 +130,7 @@ jobs:
           }
           JAVA
 
+          yes | sdkmanager --licenses 2>/dev/null || true
           gradle assembleDebug --no-daemon --stacktrace
       - name: Upload APK
         uses: actions/upload-artifact@v4
