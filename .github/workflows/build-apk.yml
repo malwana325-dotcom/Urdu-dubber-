@@ -13,10 +13,42 @@ jobs:
           distribution: 'temurin'
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
       - name: Build APK with WebView
         run: |
           mkdir -p app/src/main/java/com/urdudubber/app
-          echo "plugins { id 'com.android.application' }
+          mkdir -p app/src/main/res/values
+
+          cat > settings.gradle << 'GRADLE'
+          pluginManagement {
+            repositories {
+              google()
+              mavenCentral()
+              gradlePluginPortal()
+            }
+          }
+          dependencyResolutionManagement {
+            repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+            repositories {
+              google()
+              mavenCentral()
+            }
+          }
+          rootProject.name = 'UrduDubber'
+          include ':app'
+          GRADLE
+
+          cat > build.gradle << 'GRADLE'
+          plugins {
+            id 'com.android.application' version '8.2.1' apply false
+          }
+          GRADLE
+
+          cat > app/build.gradle << 'GRADLE'
+          plugins {
+            id 'com.android.application'
+          }
           android {
             namespace 'com.urdudubber.app'
             compileSdk 34
@@ -27,45 +59,78 @@ jobs:
               versionCode 1
               versionName '1.0'
             }
+            compileOptions {
+              sourceCompatibility JavaVersion.VERSION_17
+              targetCompatibility JavaVersion.VERSION_17
+            }
           }
           dependencies {
             implementation 'androidx.appcompat:appcompat:1.6.1'
-          }" > app/build.gradle
-          echo "include ':app'" > settings.gradle
-          echo "plugins { id 'com.android.application' version '8.2.1' apply false }
-          " > build.gradle
-          mkdir -p app/src/main
+          }
+          GRADLE
+
           cat > app/src/main/AndroidManifest.xml << 'MANI'
+          <?xml version="1.0" encoding="utf-8"?>
           <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-            <uses-permission android:name="android.permission.INTERNET"/>
-            <application android:label="Urdu Dubber" android:theme="@android:style/Theme.NoTitleBar">
-              <activity android:name=".MainActivity" android:exported="true">
-                <intent-filter><action android:name="android.intent.action.MAIN"/><category android:name="android.intent.category.LAUNCHER"/></intent-filter>
+            <uses-permission android:name="android.permission.INTERNET" />
+            <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+            <application
+              android:label="Urdu Dubber"
+              android:theme="@android:style/Theme.NoTitleBar"
+              android:usesCleartextTraffic="true">
+              <activity
+                android:name=".MainActivity"
+                android:configChanges="orientation|screenSize|keyboardHidden"
+                android:exported="true">
+                <intent-filter>
+                  <action android:name="android.intent.action.MAIN" />
+                  <category android:name="android.intent.category.LAUNCHER" />
+                </intent-filter>
               </activity>
             </application>
           </manifest>
           MANI
+
           cat > app/src/main/java/com/urdudubber/app/MainActivity.java << 'JAVA'
           package com.urdudubber.app;
+
           import android.app.Activity;
           import android.os.Bundle;
+          import android.webkit.WebSettings;
           import android.webkit.WebView;
           import android.webkit.WebViewClient;
+
           public class MainActivity extends Activity {
-            public void onCreate(Bundle b){
-              super.onCreate(b);
-              WebView w = new WebView(this);
-              w.getSettings().setJavaScriptEnabled(true);
-              w.getSettings().setDomStorageEnabled(true);
-              w.setWebViewClient(new WebViewClient());
-              w.loadUrl("https://malwana325-dotcom.github.io/Urdu-dubber-/");
-              setContentView(w);
+            private WebView webView;
+
+            @Override
+            protected void onCreate(Bundle savedInstanceState) {
+              super.onCreate(savedInstanceState);
+              webView = new WebView(this);
+              WebSettings settings = webView.getSettings();
+              settings.setJavaScriptEnabled(true);
+              settings.setDomStorageEnabled(true);
+              settings.setDatabaseEnabled(true);
+              settings.setAllowFileAccess(true);
+              webView.setWebViewClient(new WebViewClient());
+              webView.loadUrl("https://malwana325-dotcom.github.io/Urdu-dubber-/");
+              setContentView(webView);
+            }
+
+            @Override
+            public void onBackPressed() {
+              if (webView != null && webView.canGoBack()) {
+                webView.goBack();
+              } else {
+                super.onBackPressed();
+              }
             }
           }
           JAVA
+
           gradle wrapper --gradle-version 8.5
           chmod +x gradlew
-          ./gradlew assembleDebug
+          ./gradlew assembleDebug --no-daemon
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
